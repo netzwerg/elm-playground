@@ -39,9 +39,9 @@ update time state = { state | dots <- map (moveDot time) state.dots }
 
 moveDot : Time -> Dot -> Dot
 moveDot time dot =
-  let s = velocity * time / pi
+  let t = velocity * time / pi
       offset = toFloat dot.index * pi / toFloat dotCount
-      newX = (-circleSize + dotSize) * cos(s + offset)
+      newX = (-circleSize + dotSize) * cos(t + offset)
   in { dot | x <- newX }
 
 -- VIEW
