@@ -6,7 +6,7 @@ import Window
 import List exposing (..)
 import AnimationFrame
 
--- MODEL
+-- CONFIG
 
 size = 600
 circleSize = 240
@@ -14,17 +14,17 @@ dotCount = 12
 dotSize = 10
 velocity = 0.01
 
+-- MODEL
+
 type alias Dot =
     { index : Int
     , x : Float
-    , y : Float
     }
 
 defaultDot : Dot
 defaultDot =
     { index = 0
     , x = 0.0
-    , y = 0.0
     }
 
 type alias State = { dots : List Dot }
@@ -53,7 +53,7 @@ view state =
    in collage size size (background :: dotLinePairs)
 
 viewDot : Dot -> Form
-viewDot d = alpha 0.8 (filled lightOrange (circle dotSize)) |> move (d.x, d.y)
+viewDot d = alpha 0.8 (filled lightOrange (circle dotSize)) |> move (d.x, 0)
 
 viewDotWithLine : Dot -> Form
 viewDotWithLine dot =
