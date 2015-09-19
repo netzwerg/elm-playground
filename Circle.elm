@@ -4,7 +4,7 @@ import Graphics.Element exposing (..)
 import Time exposing (..)
 import Window
 import List exposing (..)
-import AnimationFrame
+import AnimationFrame -- "jwmerrill/elm-animation-frame"
 
 -- CONFIG
 
