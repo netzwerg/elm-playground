@@ -17,20 +17,21 @@ velocity = 0.01
 -- MODEL
 
 type alias Dot =
-    { index : Int
-    , x : Float
-    }
-
-defaultDot : Dot
-defaultDot =
-    { index = 0
-    , x = 0.0
+    { x : Float
+    , angle : Float
     }
 
 type alias State = { dots : List Dot }
 
 defaultState : State
-defaultState = { dots = map (\i -> { defaultDot | index <- i}) [ 0 .. dotCount - 1 ] }
+defaultState = { dots = map createDot [ 0 .. dotCount - 1 ] }
+
+createDot : Int -> Dot
+createDot index =
+    let angle = toFloat index * pi / dotCount
+    in { x = 0
+       , angle = angle
+       }
 
 -- UPDATE
 
@@ -40,8 +41,7 @@ update time state = { state | dots <- map (moveDot time) state.dots }
 moveDot : Time -> Dot -> Dot
 moveDot time dot =
   let t = velocity * time / pi
-      offset = toFloat dot.index * pi / toFloat dotCount
-      newX = (-circleSize + dotSize) * cos(t + offset)
+      newX = (-circleSize + dotSize) * cos(t + dot.angle)
   in { dot | x <- newX }
 
 -- VIEW
@@ -52,15 +52,17 @@ view state =
        dotLinePairs = map viewDotWithLine state.dots
    in collage size size (background :: dotLinePairs)
 
-viewDot : Dot -> Form
-viewDot d = alpha 0.8 (filled lightOrange (circle dotSize)) |> move (d.x, 0)
-
 viewDotWithLine : Dot -> Form
 viewDotWithLine dot =
   let dotView = viewDot dot
-      lineView = traced (solid white) (path [ (-size / 2.0, 0) , (size / 2.0, 0) ])
-      dotAndLineView = group [dotView , lineView]
-  in dotAndLineView |> rotate (toFloat dot.index * (pi / dotCount))
+      lineView = createLineView
+  in group [dotView , lineView] |> rotate dot.angle
+
+viewDot : Dot -> Form
+viewDot d = alpha 0.8 (filled lightOrange (circle dotSize)) |> move (d.x, 0)
+
+createLineView : Form
+createLineView = traced (solid white) (path [ (-size / 2.0, 0) , (size / 2.0, 0) ])
 
 -- SIGNALS
 
