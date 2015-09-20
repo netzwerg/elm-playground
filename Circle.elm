@@ -5,6 +5,7 @@ import Time exposing (..)
 import Window
 import List exposing (..)
 import AnimationFrame -- "jwmerrill/elm-animation-frame"
+import Debug
 
 -- CONFIG
 
@@ -21,10 +22,10 @@ type alias Dot =
     , angle : Float
     }
 
-type alias State = { dots : List Dot }
+type alias State = List Dot
 
-defaultState : State
-defaultState = { dots = map createDot [ 0 .. dotCount - 1 ] }
+createDots : State
+createDots = map createDot [ 0 .. dotCount - 1 ]
 
 createDot : Int -> Dot
 createDot index =
@@ -36,7 +37,7 @@ createDot index =
 -- UPDATE
 
 update : Time -> State -> State
-update time state = { state | dots <- map (moveDot time) state.dots }
+update time dots = map (moveDot time) dots |> Debug.watch "Dots"
 
 moveDot : Time -> Dot -> Dot
 moveDot time dot =
@@ -47,9 +48,9 @@ moveDot time dot =
 -- VIEW
 
 view : State -> Element
-view state =
+view dots =
    let background = filled black (circle circleSize)
-       dotLinePairs = map viewDotWithLine state.dots
+       dotLinePairs = map viewDotWithLine dots
    in collage size size (background :: dotLinePairs)
 
 viewDotWithLine : Dot -> Form
@@ -66,9 +67,9 @@ createLineView = traced (solid white) (path [ (-size / 2.0, 0) , (size / 2.0, 0)
 
 -- SIGNALS
 
-main = Signal.map view animate
+main = Signal.map view (animate createDots)
 
-animate : Signal State
-animate = Signal.foldp update defaultState time
+animate : State -> Signal State
+animate dots = Signal.foldp update dots time
 
 time = Signal.foldp (+) 0 AnimationFrame.frame
