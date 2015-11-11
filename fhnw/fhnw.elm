@@ -6,47 +6,34 @@ import Keyboard exposing (..)
 import Set exposing (..)
 import Signal exposing (..)
 
--- MODEL
+-- SIGNALS & PORTS
 
-type alias Model = Bool
+isAnyKeyDown : Signal Bool
+isAnyKeyDown = 
+  Signal.map (\keys -> not (Set.isEmpty keys)) Keyboard.keysDown 
 
-initialModel : Model
-initialModel = False
-
--- UPDATE
-
-update : Set KeyCode -> Model -> Model
-update keysDown model =
-  not (Set.isEmpty keysDown)    
-
-model : Signal Model
-model =
-  Signal.foldp update initialModel Keyboard.keysDown 
-
--- PORTS
-
-port playAudio : Signal () 
+port playAudio : Signal ()
 port playAudio =
-    Signal.map (\_ -> ()) model 
+  Signal.map (\_ -> ()) isAnyKeyDown
 
 -- VIEW
 
-view : Model -> Html
+view : Bool -> Html
 view isAnyKeyDown =
-  div [backgroundCss isAnyKeyDown] [ logo ] 
+  div [ backgroundCss isAnyKeyDown ] [ logo ] 
 
 backgroundCss : Bool -> Attribute
 backgroundCss isAnyKeyDown =
-    let background = if | isAnyKeyDown -> "#ffff00"
-                        | otherwise -> "#cccccc"
-    in style
-        [ ("width", "100%")
-        , ("height", "100%")
-        , ("position","absolute") 
-        , ("top", "0")
-        , ("left", "0")
-        , ("background", background)
-        ]
+  let background = if | isAnyKeyDown -> "#ffff00"
+                      | otherwise -> "#cccccc"
+  in style
+      [ ("width", "100%")
+      , ("height", "100%")
+      , ("position","absolute") 
+      , ("top", "0")
+      , ("left", "0")
+      , ("background", background)
+      ]
 
 logo : Html
 logo =
@@ -64,6 +51,8 @@ logoCss =
     , ("margin", "auto")
     ]
 
+-- MAIN
+
 main : Signal Html
 main =
-  Signal.map view model
+  Signal.map view isAnyKeyDown 
