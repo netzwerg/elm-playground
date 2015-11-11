@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Elm Audio Example</title>
+        <script type="text/javascript" src="elm.js"></script>
+    </head>
+
+    <body>
+        <audio id="audio" src="piano.ogg" preload="auto"></audio>
+    </body>
+
+    <script type="text/javascript">
+        var app = Elm.fullscreen(Elm.Main, {});
+        
+        // HTML5 way of playing audio files 
+        var audio = document.getElementById('audio')
+        function playAudio() {
+            // reset if already running
+            audio.pause();
+            audio.currentTime = 0;
+
+            // go!
+            audio.play();
+        }
+        
+        // trigger JS callback whenever Elm sends a signal via port
+        app.ports.playAudio.subscribe(playAudio);
+    </script>
+
+</html>
