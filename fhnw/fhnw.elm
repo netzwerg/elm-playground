@@ -12,9 +12,13 @@ isAnyKeyDown : Signal Bool
 isAnyKeyDown = 
   Signal.map (\keys -> not (Set.isEmpty keys)) Keyboard.keysDown 
 
+isAnyKeyPressed : Signal Bool
+isAnyKeyPressed =
+  Signal.filter identity False isAnyKeyDown
+
 port playAudio : Signal ()
 port playAudio =
-  Signal.map (\_ -> ()) isAnyKeyDown
+  Signal.map (\_ -> ()) isAnyKeyPressed 
 
 -- VIEW
 
