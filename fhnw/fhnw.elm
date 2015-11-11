@@ -4,6 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (src, style)
 import Keyboard exposing (..)
 import Set exposing (..)
+import Signal exposing (..)
 
 -- MODEL
 
@@ -21,6 +22,12 @@ update keysDown model =
 model : Signal Model
 model =
   Signal.foldp update initialModel Keyboard.keysDown 
+
+-- PORTS
+
+port playAudio : Signal () 
+port playAudio =
+    Signal.map (\_ -> ()) model 
 
 -- VIEW
 
