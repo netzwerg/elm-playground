@@ -1,14 +1,7 @@
-module Update where
-
-import Model exposing (Model)
-
-type Action = Increment | Decrement
-
-update : Action -> Model -> Model
-update action model =
-  case action of
-    Increment ->
-      model + 1
-
-    Decrement ->
-      model - 1
+-- module Update where
+--
+-- import Model exposing (Model)
+--
+-- clickPosition : Signal (Int, Int)
+-- clickPosition =
+--   Signal.sampleOn Mouse.clicks Mouse.position

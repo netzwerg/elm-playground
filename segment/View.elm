@@ -1,27 +1,24 @@
 module View where
 
-import Model exposing (Model)
-import Update exposing (..)
-import Html exposing (..)
-import Html.Attributes exposing (style)
-import Html.Events exposing (onClick)
+import Model exposing (..)
+import Color exposing (..)
+import Graphics.Collage exposing (..)
+import Graphics.Element exposing (..)
+import List exposing (..)
 
 
-view : Signal.Address Action -> Model -> Html
-view address model =
-  div []
-    [ button [ onClick address Decrement ] [ text "-" ]
-    , div [ countStyle ] [ text (toString model) ]
-    , button [ onClick address Increment ] [ text "+" ]
-    ]
+view : Model -> Element
+view model =
+  collage 300 300 (content model)
 
 
-countStyle : Attribute
-countStyle =
-  style
-    [ ("font-size", "20px")
-    , ("font-family", "monospace")
-    , ("display", "inline-block")
-    , ("width", "50px")
-    , ("text-align", "center")
-    ]
+content : Model -> List Form
+content points =
+  map toSquare points
+
+
+toSquare : (Float, Float) -> Form
+toSquare (x, y) =
+  square 10
+    |> filled blue
+    |> move (x, y)

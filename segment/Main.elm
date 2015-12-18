@@ -1,12 +1,7 @@
-import Model exposing (model)
-import Update exposing (update)
 import View exposing (view)
-import StartApp.Simple exposing (start)
+import Model exposing (model)
+import Graphics.Element exposing (..)
 
 
-main =
-  start
-    { model = model
-    , update = update
-    , view = view
-    }
+main : Element
+main = view model
