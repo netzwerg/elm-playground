@@ -43,7 +43,7 @@ moveDot : Time -> Dot -> Dot
 moveDot time dot =
   let t = velocity * time / pi
       newX = (-circleSize + dotSize) * cos(t + dot.angle)
-  in { dot | x <- newX }
+  in { dot | x = newX }
 
 -- VIEW
 
