@@ -1,0 +1,6 @@
+`src/elm-d3` is cloned from https://github.com/seliopou/elm-d3 (commit 1e1b70)
+
+----
+elm make --output=elm.js
+open index.html
+----

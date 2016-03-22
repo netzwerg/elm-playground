@@ -1,11 +1,12 @@
 {
-    "version": "1.0.0",
-    "summary": "helpful summary of your project, less than 80 characters",
-    "repository": "https://github.com/user/project.git",
+    "version": "0.1.0",
+    "summary": "Playing with Elm and D3",
+    "repository": "https://github.com/netzwerg/elm-playground.git",
     "license": "BSD3",
     "source-directories": [
         "src"
     ],
+    "native-modules": true,
     "exposed-modules": [],
     "dependencies": {
         "elm-lang/core": "3.0.0 <= v < 4.0.0"
