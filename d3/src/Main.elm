@@ -1,57 +1,46 @@
+module Main where
+
 import Graphics.Input exposing (..)
 import Graphics.Element exposing (..)
-import Graphics.Collage exposing (..)
 import Mouse
 
 import D3 exposing (..)
+import D3.Event exposing (..)
 import D3.Color
 
-size   = 375
-margin = { top = 25, left = 25, right = 25, bottom = 25 }
-dims   = { height = size - margin.top - margin.bottom
-         , width  = size - margin.left - margin.right }
+type alias Model = String
 
-type alias Dimensions = { height : Int, width : Int }
-type alias Margins = { top : Int, left : Int, right : Int, bottom : Int }
+events : D3.Event.Stream String
+events = stream ()
 
-svg : Dimensions -> Margins -> D3 a a
-svg ds ms =
+view : D3 Model String
+view =
   static "svg"
-  |. num attr "height" (ds.height + ms.top + ms.bottom)
-  |. num attr "width"  (ds.width  + ms.left + ms.right)
-  |. static "g"
-     |. str attr "transform" (translate margin.left margin.top)
-
--- Move the mouse to the left to right to remove or add circles. Move the mouse
--- up and down to change the brightness of the circles.
-circles : D3 (Int, Int) Int
-circles =
-  selectAll "circle"
-  |= (\(x, y) -> List.repeat (x // 50) y)
-     |- enter <.> append "circle"
-        |. fun attr "fill" color
-        |. num attr "r"    0
-        |. num attr "cy"   150
-        |. fun attr "cx"   (\_ i -> toString (25 + 50 * i))
-        |. transition
-           |. num attr "r" 25
-     |- update
-        |. fun attr "fill" color
+  |. selectAll "text"
+    |= (\_ -> ["H","E","L","L","O", "!"])
+     |- enter <.> append "text"
+       |. str style "font-size" "x-large"
+       |. str attr "text-anchor" "middle"
+       |. fun attr "class" (\_ i -> toString i)
+       |. fun attr "dx" (\_ i -> toString (i + 1) ++ "em")
+       |. text (\s i -> s)
+       |. str attr "transform" (translate 0 0)
+         |. transition
+         |. duration (\s i -> 3000)
+         |. str attr "transform" (translate 0 100)
      |- exit
-        |. remove
-
-color : Int -> Int -> String
-color y i =
-  let steelBlue = D3.Color.fromString "steelblue"
-      magnitude = (2 * toFloat y / toFloat dims.height) ^ (toFloat i / 2)
-    in D3.Color.toString (D3.Color.darker magnitude steelBlue)
+       |. remove
 
 translate : Int -> Int -> String
 translate x y = "translate(" ++ (toString x) ++ "," ++ (toString y) ++ ")"
 
-vis dims margin =
-  svg dims margin
-  |. circles
+animate : String -> Model -> Model
+animate id model = id
+
+controller : Signal Model
+controller =
+  let initial = "" in
+  D3.Event.folde animate initial events
 
 main : Signal Element
-main = Signal.map (render dims.width dims.height (vis dims margin)) Mouse.position
+main = Signal.map (render 900 200 view) controller

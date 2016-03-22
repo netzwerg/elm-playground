@@ -4,7 +4,8 @@
     "repository": "https://github.com/netzwerg/elm-playground.git",
     "license": "BSD3",
     "source-directories": [
-        "src"
+        "src",
+        "src/elm-d3"
     ],
     "native-modules": true,
     "exposed-modules": [],
